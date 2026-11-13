@@ -57,7 +57,6 @@ ask_me_about: TypeScript, APIs, why my commit messages are like that
 | project | what it does | vibe |
 |---|---|---|
 | **personal-investment-intelligence** | AI-driven stock scoring + daily snapshots | 📊 big brain |
-| *your next project here* | ??? | 🚀 soon |
 
 ### 📬 slide into my dms
 <div align="center">
