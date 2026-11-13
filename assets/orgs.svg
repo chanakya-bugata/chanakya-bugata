@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 540" width="1200" height="540">
+<style>
+.o{font:700 20px Georgia,'Times New Roman',serif;fill:#F4F1EA}.tg{font:600 11px 'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;letter-spacing:2.5px}.d{font:400 13px -apple-system,'Segoe UI',Helvetica,Arial,sans-serif;fill:#9AA4B2}
+.mono{font:italic 700 46px Georgia,'Times New Roman',serif}.ml{font:600 11px 'SF Mono',Menlo,Consolas,'Liberation Mono',monospace;fill:#AEB6C2;letter-spacing:3px}
+.b{animation:bob 7s ease-in-out infinite}@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.in{transform-box:fill-box;transform-origin:50% 50%;animation:pop .9s cubic-bezier(.2,.9,.25,1.2) both}@keyframes pop{from{opacity:0;transform:scale(.6)}to{opacity:1;transform:none}}
+.b0{animation-delay:-0.0s}.in0{animation-delay:0.20s}
+.b1{animation-delay:-1.4s}.in1{animation-delay:0.35s}
+.b2{animation-delay:-2.8s}.in2{animation-delay:0.50s}
+.b3{animation-delay:-4.2s}.in3{animation-delay:0.65s}
+.b4{animation-delay:-5.6s}.in4{animation-delay:0.80s}
+</style><defs><linearGradient id="mg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF5A36"/><stop offset=".5" stop-color="#FFB347"/><stop offset="1" stop-color="#FFD166"/><animateTransform attributeName="gradientTransform" type="rotate" values="0 .5 .5;360 .5 .5" dur="8s" repeatCount="indefinite"/></linearGradient><radialGradient id="cg"><stop offset="0" stop-color="#FF7A3D" stop-opacity=".45"/><stop offset="1" stop-color="#FF7A3D" stop-opacity="0"/></radialGradient></defs>
+<ellipse cx="600" cy="262" rx="250" ry="150" fill="none" stroke="#FFB347" stroke-opacity="0.16" stroke-dasharray="2 8"><animate attributeName="stroke-dashoffset" values="0;-200" dur="10.0s" repeatCount="indefinite"/></ellipse>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M850,262 A250,150 0 1 1 350,262 A250,150 0 1 1 850,262" dur="20.0s" begin="-0.0s" repeatCount="indefinite"/></circle>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M850,262 A250,150 0 1 1 350,262 A250,150 0 1 1 850,262" dur="20.0s" begin="-6.7s" repeatCount="indefinite"/></circle>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M850,262 A250,150 0 1 1 350,262 A250,150 0 1 1 850,262" dur="20.0s" begin="-13.3s" repeatCount="indefinite"/></circle>
+<ellipse cx="600" cy="262" rx="340" ry="205" fill="none" stroke="#FFB347" stroke-opacity="0.1" stroke-dasharray="2 8"><animate attributeName="stroke-dashoffset" values="0;-200" dur="15.0s" repeatCount="indefinite"/></ellipse>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M940,262 A340,205 0 1 1 260,262 A340,205 0 1 1 940,262" dur="30.0s" begin="-0.0s" repeatCount="indefinite"/></circle>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M940,262 A340,205 0 1 1 260,262 A340,205 0 1 1 940,262" dur="30.0s" begin="-10.0s" repeatCount="indefinite"/></circle>
+<circle r="2.5" fill="#FFD166"><animateMotion path="M940,262 A340,205 0 1 1 260,262 A340,205 0 1 1 940,262" dur="30.0s" begin="-20.0s" repeatCount="indefinite"/></circle>
+<line x1="600" y1="262" x2="160.0" y2="88.0" stroke="#FF5A36" stroke-opacity=".18"/>
+<line x1="600" y1="262" x2="160.0" y2="88.0" stroke="#FF5A36" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 600"><animate attributeName="stroke-dashoffset" values="14;-600" dur="2.6s" begin="-0.0s" repeatCount="indefinite"/></line>
+<line x1="600" y1="262" x2="160.0" y2="378.0" stroke="#FFB347" stroke-opacity=".18"/>
+<line x1="600" y1="262" x2="160.0" y2="378.0" stroke="#FFB347" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 600"><animate attributeName="stroke-dashoffset" values="14;-600" dur="2.9s" begin="-0.5s" repeatCount="indefinite"/></line>
+<line x1="600" y1="262" x2="1040.0" y2="88.0" stroke="#FF8A3D" stroke-opacity=".18"/>
+<line x1="600" y1="262" x2="1040.0" y2="88.0" stroke="#FF8A3D" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 600"><animate attributeName="stroke-dashoffset" values="14;-600" dur="3.2s" begin="-1.0s" repeatCount="indefinite"/></line>
+<line x1="600" y1="262" x2="1040.0" y2="378.0" stroke="#5EEAD4" stroke-opacity=".18"/>
+<line x1="600" y1="262" x2="1040.0" y2="378.0" stroke="#5EEAD4" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 600"><animate attributeName="stroke-dashoffset" values="14;-600" dur="3.5s" begin="-1.5s" repeatCount="indefinite"/></line>
+<line x1="600" y1="262" x2="600.0" y2="478.0" stroke="#FFD166" stroke-opacity=".18"/>
+<line x1="600" y1="262" x2="600.0" y2="478.0" stroke="#FFD166" stroke-width="2" stroke-linecap="round" stroke-dasharray="14 600"><animate attributeName="stroke-dashoffset" values="14;-600" dur="3.8s" begin="-2.0s" repeatCount="indefinite"/></line>
+<circle cx="600" cy="262" r="130" fill="url(#cg)"/>
+<circle cx="600" cy="262" r="62" fill="none" stroke="#FF7A3D" stroke-width="1.5"><animate attributeName="r" values="62;120" dur="3.6s" begin="-0.0s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0" dur="3.6s" begin="-0.0s" repeatCount="indefinite"/></circle>
+<circle cx="600" cy="262" r="62" fill="none" stroke="#FF7A3D" stroke-width="1.5"><animate attributeName="r" values="62;120" dur="3.6s" begin="-1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0" dur="3.6s" begin="-1.2s" repeatCount="indefinite"/></circle>
+<circle cx="600" cy="262" r="62" fill="none" stroke="#FF7A3D" stroke-width="1.5"><animate attributeName="r" values="62;120" dur="3.6s" begin="-2.4s" repeatCount="indefinite"/><animate attributeName="opacity" values=".6;0" dur="3.6s" begin="-2.4s" repeatCount="indefinite"/></circle>
+<circle cx="600" cy="262" r="62" fill="#0E131B" stroke="url(#mg)" stroke-width="2.5"/>
+<text class="mono" x="600" y="276" text-anchor="middle" fill="url(#mg)">CB</text>
+<text class="ml" x="600" y="354" text-anchor="middle">5 ORGS · 1 BUILDER</text>
+<g transform="translate(40,40)"><g class="in in0"><g class="b b0"><rect width="240" height="96" rx="16" fill="#10141C" stroke="#FF5A36" stroke-opacity=".55" stroke-width="1.3"/><rect x="0" y="16" width="3" height="64" rx="1.5" fill="#FF5A36"/><text class="tg" x="20" y="26" fill="#FF5A36">PLATFORM</text><text class="o" x="20" y="50">Infuser-s</text><text class="d" x="20" y="70">APIs, auth, commerce, monitoring,</text><text class="d" x="20" y="86">CI/CD actions &amp; test automation</text></g></g></g>
+<g transform="translate(40,330)"><g class="in in1"><g class="b b1"><rect width="240" height="96" rx="16" fill="#10141C" stroke="#FFB347" stroke-opacity=".55" stroke-width="1.3"/><rect x="0" y="16" width="3" height="64" rx="1.5" fill="#FFB347"/><text class="tg" x="20" y="26" fill="#FFB347">PRODUCT</text><text class="o" x="20" y="50">infusers-apps</text><text class="d" x="20" y="70">Web, mobile &amp; community apps</text><text class="d" x="20" y="86">built on the Infusers platform</text></g></g></g>
+<g transform="translate(920,40)"><g class="in in2"><g class="b b2"><rect width="240" height="96" rx="16" fill="#10141C" stroke="#FF8A3D" stroke-opacity=".55" stroke-width="1.3"/><rect x="0" y="16" width="3" height="64" rx="1.5" fill="#FF8A3D"/><text class="tg" x="20" y="26" fill="#FF8A3D">FINTECH</text><text class="o" x="20" y="50">namacart</text><text class="d" x="20" y="70">Investment intelligence: AI stock</text><text class="d" x="20" y="86">scoring, HQ &amp; landing</text></g></g></g>
+<g transform="translate(920,330)"><g class="in in3"><g class="b b3"><rect width="240" height="96" rx="16" fill="#10141C" stroke="#5EEAD4" stroke-opacity=".55" stroke-width="1.3"/><rect x="0" y="16" width="3" height="64" rx="1.5" fill="#5EEAD4"/><text class="tg" x="20" y="26" fill="#5EEAD4">EDTECH</text><text class="o" x="20" y="50">CareerStax</text><text class="d" x="20" y="70">Placement-readiness platform</text><text class="d" x="20" y="86">for engineering students</text></g></g></g>
+<g transform="translate(480,430)"><g class="in in4"><g class="b b4"><rect width="240" height="96" rx="16" fill="#10141C" stroke="#FFD166" stroke-opacity=".55" stroke-width="1.3"/><rect x="0" y="16" width="3" height="64" rx="1.5" fill="#FFD166"/><text class="tg" x="20" y="26" fill="#FFD166">CLEANTECH</text><text class="o" x="20" y="50">grace-solar-tech</text><text class="d" x="20" y="70">Solar quotation tooling</text><text class="d" x="20" y="86">and company site</text></g></g></g>
+</svg>
