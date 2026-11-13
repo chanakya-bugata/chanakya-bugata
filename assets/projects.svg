@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 590" width="1200" height="590">
+<style>.t{font:700 26px Georgia,serif;fill:#F4F1EA}.h{font:600 12px 'SF Mono',Menlo,Consolas,monospace;letter-spacing:2.5px}.d{font:400 15px -apple-system,Segoe UI,Helvetica,Arial,sans-serif;fill:#9AA4B2}.m{font:500 12px 'SF Mono',Menlo,Consolas,monospace;fill:#6B7686}.num{font:italic 700 56px Georgia,serif;fill:#fff;fill-opacity:.05}
+.c0{opacity:0;animation:in .8s 0.00s forwards}
+.c1{opacity:0;animation:in .8s 0.12s forwards}
+.c2{opacity:0;animation:in .8s 0.24s forwards}
+.c3{opacity:0;animation:in .8s 0.36s forwards}
+.c4{opacity:0;animation:in .8s 0.48s forwards}
+.c5{opacity:0;animation:in .8s 0.60s forwards}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}.sw{animation:sw 5s linear infinite}@keyframes sw{from{stroke-dashoffset:520}to{stroke-dashoffset:0}}</style>
+<rect width="100%" height="100%" fill="#0B0E14" rx="22"/>
+<g class="c0" transform="translate(30,30)">
+<defs><linearGradient id="g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF5A36"/><stop offset="1" stop-color="#FF5A36" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g0)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#FF5A36" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">01</text>
+<circle cx="28" cy="33" r="4" fill="#FF5A36"/><text class="h" x="42" y="37" fill="#FF5A36">NAMACART · PII</text>
+<text class="t" x="28" y="80">Investment intelligence</text>
+<text class="d" x="28" y="108">AI-driven stock scoring with daily score snapshots and a recommendations engine.</text>
+<text class="m" x="28" y="140">TypeScript · Node · Postgres</text></g>
+<g class="c1" transform="translate(610,30)">
+<defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FF8A3D"/><stop offset="1" stop-color="#FF8A3D" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g1)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#FF8A3D" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">02</text>
+<circle cx="28" cy="33" r="4" fill="#FF8A3D"/><text class="h" x="42" y="37" fill="#FF8A3D">NAMACART · LANDING</text>
+<text class="t" x="28" y="80">nc-landing</text>
+<text class="d" x="28" y="108">Public landing site for the NamaCart product.</text>
+<text class="m" x="28" y="140">CSS · Web</text></g>
+<g class="c2" transform="translate(30,215)">
+<defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFB347"/><stop offset="1" stop-color="#FFB347" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g2)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#FFB347" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">03</text>
+<circle cx="28" cy="33" r="4" fill="#FFB347"/><text class="h" x="42" y="37" fill="#FFB347">RADIANCE</text>
+<text class="t" x="28" y="80">Skincare iOS app</text>
+<text class="d" x="28" y="108">Native app for skincare routines, with an admin dashboard.</text>
+<text class="m" x="28" y="140">Swift · TypeScript</text></g>
+<g class="c3" transform="translate(610,215)">
+<defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFD166"/><stop offset="1" stop-color="#FFD166" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g3)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#FFD166" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">04</text>
+<circle cx="28" cy="33" r="4" fill="#FFD166"/><text class="h" x="42" y="37" fill="#FFD166">LEGAL AI ASSIST</text>
+<text class="t" x="28" y="80">Legal copilot</text>
+<text class="d" x="28" y="108">AI assistant for legal workflows, iterated across several builds.</text>
+<text class="m" x="28" y="140">Python · LLM</text></g>
+<g class="c4" transform="translate(30,400)">
+<defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5EEAD4"/><stop offset="1" stop-color="#5EEAD4" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g4)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">05</text>
+<circle cx="28" cy="33" r="4" fill="#5EEAD4"/><text class="h" x="42" y="37" fill="#5EEAD4">POTHOLE DETECTION</text>
+<text class="t" x="28" y="80">AIoT · SRM</text>
+<text class="d" x="28" y="108">Road-damage detection with computer vision on an AIoT stack.</text>
+<text class="m" x="28" y="140">Python · Notebook</text></g>
+<g class="c5" transform="translate(610,400)">
+<defs><linearGradient id="g5" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2DD4BF"/><stop offset="1" stop-color="#2DD4BF" stop-opacity=".1"/></linearGradient></defs>
+<rect width="560" height="165" rx="18" fill="#12161F"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="url(#g5)" stroke-opacity=".7" stroke-width="1.5"/>
+<rect x=".75" y=".75" width="558.5" height="163.5" rx="18" fill="none" stroke="#2DD4BF" stroke-width="2" stroke-dasharray="90 430" class="sw" stroke-linecap="round"/>
+<text class="num" x="490" y="68">06</text>
+<circle cx="28" cy="33" r="4" fill="#2DD4BF"/><text class="h" x="42" y="37" fill="#2DD4BF">CUSTOM CHATBOT</text>
+<text class="t" x="28" y="80">GenAI</text>
+<text class="d" x="28" y="108">LLM inference on CPU, then fine-tuned into a custom chatbot.</text>
+<text class="m" x="28" y="140">Python · Notebook</text></g>
+</svg>
