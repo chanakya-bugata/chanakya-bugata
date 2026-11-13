@@ -1,4 +1,4 @@
-name: Generate snake animation
+name: Generate profile animations
 
 on:
   schedule:
@@ -13,7 +13,7 @@ permissions:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: Platane/snk/svg-only@v3
         with:
@@ -21,6 +21,14 @@ jobs:
           outputs: |
             dist/github-snake.svg
             dist/github-snake-dark.svg?palette=github-dark
+
+      - uses: yoshi389111/github-profile-3d-contrib@0.7.1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          USERNAME: ${{ github.repository_owner }}
+
+      - name: Collect 3D graph
+        run: cp profile-3d-contrib/profile-night-view.svg dist/profile-3d.svg
 
       - uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
