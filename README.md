@@ -62,9 +62,7 @@ ask_me_about: TypeScript, APIs, why my commit messages are like that
 ### 📬 slide into my dms
 <div align="center">
 
-[![Email](https://img.shields.io/badge/-email-c77dff?style=for-the-badge&logo=gmail&logoColor=white)](mailto:YOUR_EMAIL)
-[![LinkedIn](https://img.shields.io/badge/-linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/YOUR_HANDLE)
-[![X](https://img.shields.io/badge/-x-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/YOUR_HANDLE)
+[![Email](https://img.shields.io/badge/-email-c77dff?style=for-the-badge&logo=gmail&logoColor=white)](mailto:chanakya.offc@gmail.com)
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=12,20,24&height=100&section=footer" width="100%"/>
 
