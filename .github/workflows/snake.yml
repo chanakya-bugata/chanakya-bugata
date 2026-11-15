@@ -28,7 +28,7 @@ jobs:
           USERNAME: ${{ github.repository_owner }}
 
       - name: Collect 3D graph
-        run: cp profile-3d-contrib/profile-night-view.svg dist/profile-3d.svg
+        run: cp profile-3d-contrib/profile-night-rainbow.svg dist/profile-3d.svg
 
       - uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
