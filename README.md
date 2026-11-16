@@ -1,12 +1,17 @@
-<img src="assets/hero.svg" alt="Chanakya Bugata, full-stack engineer. Web and mobile apps, AI, automation and data analysis." width="100%"/>
+<a href="assets/reel.mp4"><img src="assets/reel.webp" alt="Chanakya Bugata, full-stack engineer. A short 3D reel: a normal day of work, the services on offer (web apps, mobile apps, AI features, backends, data analysis, automation), the tools used, and how to get in touch." width="100%"/></a>
 
-<img src="assets/day.svg" alt="A normal day: analyse, design, build, test, ship, monitor." width="100%"/>
+<p align="center"><a href="assets/reel.mp4">Watch the full-quality video</a></p>
 
-<img src="assets/services.svg" alt="Services: web apps and dashboards, mobile apps, AI and smart features, APIs and backends, data and analysis, automation and quality." width="100%"/>
+<details>
+<summary>The same reel, as plain text</summary>
 
-<img src="assets/stack.svg" alt="Toolbelt: TypeScript, React, Node.js, Python, Swift, Java, Spring Boot, SQL, PostgreSQL, Docker, GitHub Actions, Jenkins, Selenium, Cloudflare, LLMs, computer vision." width="100%"/>
+**A normal day:** analyse, design, build, test, ship, monitor.
 
-<img src="assets/activity.svg" alt="Daily activity in 3D" width="100%"/>
+**What I offer:** web apps and dashboards, mobile apps, AI and smart features, APIs and backends, data and analysis, automation and quality.
+
+**Toolbelt:** TypeScript, React, Node.js, Python, Swift, Java, Spring Boot, SQL, PostgreSQL, Docker, GitHub Actions, Jenkins, Selenium, Cloudflare, LLMs, computer vision.
+
+</details>
 
 <img src="https://raw.githubusercontent.com/chanakya-bugata/chanakya-bugata/output/profile-3d.svg" alt="3D contribution graph" width="100%"/>
 
