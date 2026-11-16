@@ -30,11 +30,11 @@ const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDraw
 renderer.setPixelRatio(Math.min(1.5, window.devicePixelRatio || 1));
 renderer.setSize(W, H);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.05;
+renderer.toneMappingExposure = 0.9;
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#05060A');
-scene.fog = new THREE.FogExp2('#05060A', 0.014);
+scene.background = new THREE.Color('#000000');
+scene.fog = new THREE.FogExp2('#000000', 0.02);
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 scene.environmentIntensity = 0.45;
@@ -43,9 +43,9 @@ const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 600);
 
 // ---------------------------------------------------------------- starfield
 {
-  const N = 9000, pos = new Float32Array(N * 3), size = new Float32Array(N), ph = new Float32Array(N),
+  const N = 4500, pos = new Float32Array(N * 3), size = new Float32Array(N), ph = new Float32Array(N),
     fr = new Float32Array(N), cl = new Float32Array(N * 3);
-  const pal = [C.cyan, C.violet, C.pink, '#ffffff', '#ffffff'].map(c => new THREE.Color(c));
+  const pal = ['#ffffff', '#ffffff', '#ffffff', C.violet, C.cyan].map(c => new THREE.Color(c));
   for (let i = 0; i < N; i++) {
     pos[i * 3] = -80 + R() * 340; pos[i * 3 + 1] = -25 + R() * 60; pos[i * 3 + 2] = -90 + R() * 130;
     size[i] = 0.5 + Math.pow(R(), 3) * 3.2; ph[i] = R() * TAU; fr[i] = 1 + Math.floor(R() * 3);
@@ -61,7 +61,7 @@ const camera = new THREE.PerspectiveCamera(42, W / H, 0.1, 600);
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: { uP: { value: 0 } },
     vertexShader: `attribute float aSize,aPh,aFr; attribute vec3 aCol; uniform float uP; varying vec3 vC; varying float vA;
       void main(){ vec4 mv=modelViewMatrix*vec4(position,1.); float tw=.55+.45*sin(uP*6.2831853*aFr+aPh);
-      vC=aCol*1.6; vA=tw; gl_PointSize=clamp(aSize*(260./-mv.z),1.,9.); gl_Position=projectionMatrix*mv; }`,
+      vC=aCol*.9; vA=tw*.7; gl_PointSize=clamp(aSize*(260./-mv.z),1.,9.); gl_Position=projectionMatrix*mv; }`,
     fragmentShader: `varying vec3 vC; varying float vA; void main(){ float d=length(gl_PointCoord-.5)*2.; float a=smoothstep(1.,0.,d); gl_FragColor=vec4(vC*vA,a*a*vA); }`,
   });
   scene.add(new THREE.Points(g, window.starMat));
@@ -76,7 +76,7 @@ const gridMat = new THREE.ShaderMaterial({
       float dist=length(cameraPosition-vW); float fade=exp(-dist*.028);
       vec3 c=mix(vec3(.55,.36,.96),vec3(.13,.83,.93),smoothstep(-1.,1.,sin(vW.x*.04)));
       float pulse=smoothstep(.82,1.,sin(vW.x*.09-uP*6.2831853*6.))*1.6+smoothstep(.9,1.,sin(vW.z*.2+uP*6.2831853*3.))*.6;
-      gl_FragColor=vec4(c*l*fade*(.55+pulse),l*fade); }`,
+      gl_FragColor=vec4(c*l*fade*(.18+pulse*.35),l*fade*.5); }`,
 });
 {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(520, 160), gridMat);
@@ -244,16 +244,16 @@ const toolDots = toolPos.map((p, i) => { const m = new THREE.Mesh(new THREE.Sphe
 const composer = new EffectComposer(renderer);
 composer.setSize(W, H);
 composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.7, 0.6, 1.15);
+const bloom = new UnrealBloomPass(new THREE.Vector2(W, H), 0.45, 0.5, 1.2);
 composer.addPass(bloom);
 const fx = new ShaderPass({
-  uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uAb: { value: .0012 }, uBlur: { value: 0 }, uGrain: { value: .035 } },
+  uniforms: { tDiffuse: { value: null }, uT: { value: 0 }, uAb: { value: .0012 }, uBlur: { value: 0 }, uGrain: { value: .022 } },
   vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.); }`,
   fragmentShader: `uniform sampler2D tDiffuse; uniform float uT,uAb,uBlur,uGrain; varying vec2 vUv;
     float h(vec2 p){ return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453); }
     void main(){ vec2 c=vUv-.5; float r=length(c); float ab=uAb*(.3+r*2.2); vec3 acc=vec3(0.);
       for(int i=0;i<10;i++){ float s=1.-uBlur*float(i)/10.*.22; acc.r+=texture2D(tDiffuse,.5+c*s*(1.+ab)).r; acc.g+=texture2D(tDiffuse,.5+c*s).g; acc.b+=texture2D(tDiffuse,.5+c*s*(1.-ab)).b; }
-      vec3 col=acc/10.; col*=1.-smoothstep(.35,.95,r*1.25)*.7; col+=(h(vUv*vec2(1280.,720.)+uT)-.5)*uGrain;
+      vec3 col=acc/10.; col*=1.-smoothstep(.3,.9,r*1.25)*.9; col+=(h(vUv*vec2(1280.,720.)+uT)-.5)*uGrain;
       gl_FragColor=vec4(col,1.); }`,
 });
 composer.addPass(fx);
@@ -343,7 +343,10 @@ function frame(t) {
 
   // camera
   const pose = cameraAt(t);
-  camera.position.copy(pose.p); camera.fov = (pose.fov + kick * 14) * (W / H < 1 ? 1.5 : 1); camera.updateProjectionMatrix();
+  camera.position.copy(pose.p); camera.fov = (pose.fov + kick * 14) * (W / H < 1 ? 1.5 : 1);
+  const shift = W > 980 ? 0.2 * (1 - smooth(4.6, 6.2, t) + smooth(22.8, 24.4, t)) : 0;
+  if (shift > 0.001) camera.setViewOffset(W, H, -W * shift, 0, W, H); else camera.clearViewOffset();
+  camera.updateProjectionMatrix();
   camera.lookAt(pose.l); camera.updateMatrixWorld();
   fx.uniforms.uAb.value = .0012 + kick * .016; fx.uniforms.uBlur.value = kick * 1.0; fx.uniforms.uT.value = t;
 
