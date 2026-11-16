@@ -243,12 +243,61 @@ function ringAngle(u) { // u in [0,6]: hold each panel facing front, then ease t
 const toolsG = new THREE.Group(); toolsG.position.x = X_TOOLS; scene.add(toolsG);
 const TOOLS = [['TypeScript', C.cyan], ['React', C.cyan], ['Node.js', C.cyan], ['Python', C.violet], ['Swift', C.pink], ['Java', C.pink], ['Spring Boot', C.pink], ['SQL', C.lime],
   ['PostgreSQL', C.sky], ['Docker', C.sky], ['GitHub Actions', C.orange], ['Jenkins', C.orange], ['Selenium', C.lime], ['Cloudflare', C.orange], ['LLMs', C.violet], ['Computer Vision', C.violet]];
-const toolPos = TOOLS.map((_, i) => { const k = i + .5, phi = Math.acos(1 - 2 * k / TOOLS.length), th = Math.PI * (1 + Math.sqrt(5)) * k; return new THREE.Vector3(Math.cos(th) * Math.sin(phi), Math.cos(phi), Math.sin(th) * Math.sin(phi)).multiplyScalar(4.4); });
+const GR = 4.4, RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fib = (i, n, r) => { const k = i + .5, phi = Math.acos(1 - 2 * k / n), th = Math.PI * (1 + Math.sqrt(5)) * k; return new THREE.Vector3(Math.cos(th) * Math.sin(phi), Math.cos(phi), Math.sin(th) * Math.sin(phi)).multiplyScalar(r); };
+const toolPos = TOOLS.map((_, i) => fib(i, TOOLS.length, GR));
 const globe = new THREE.Group(); toolsG.add(globe);
-globe.add(new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(4.4, 3)), new THREE.LineBasicMaterial({ color: col(C.violet, 1.3), transparent: true, opacity: .35, blending: THREE.AdditiveBlending })));
-globe.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.7, 2), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.1, .9, 1.5) })));
-const toolDots = toolPos.map((p, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.13, 12, 12), new THREE.MeshBasicMaterial({ color: col(TOOLS[i][1], 4) })); m.position.copy(p); globe.add(m);
-  const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), p]), new THREE.LineBasicMaterial({ color: col(TOOLS[i][1], 1.5), transparent: true, opacity: .25, blending: THREE.AdditiveBlending })); globe.add(ln); return m; });
+const ADD = { transparent: true, blending: THREE.AdditiveBlending, depthWrite: false };
+// dotted surface + a few latitude lines
+{ const N = 1600, a = new Float32Array(N * 3); for (let i = 0; i < N; i++) fib(i, N, GR * .995).toArray(a, i * 3);
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(a, 3));
+  globe.add(new THREE.Points(g, new THREE.PointsMaterial({ color: col('#A99BFF', .8), size: .05, opacity: .5, ...ADD })));
+  [-55, -25, 0, 25, 55].forEach(lat => { const r = GR * Math.cos(lat * Math.PI / 180), y = GR * Math.sin(lat * Math.PI / 180);
+    const pts = []; for (let s = 0; s <= 128; s++) pts.push(new THREE.Vector3(Math.cos(s / 128 * TAU) * r, y, Math.sin(s / 128 * TAU) * r));
+    globe.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: col(C.violet, 1), opacity: lat ? .1 : .22, ...ADD }))); }); }
+// rim light on the edge of the globe
+globe.add(new THREE.Mesh(new THREE.SphereGeometry(GR * 1.02, 64, 64), new THREE.ShaderMaterial({ ...ADD,
+  vertexShader: `varying vec3 vN, vV; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }`,
+  fragmentShader: `varying vec3 vN, vV; void main(){ float f = pow(1. - clamp(dot(vN, vV), 0., 1.), 3.); gl_FragColor = vec4(mix(vec3(.55,.36,.96), vec3(.13,.83,.93), f) * f * .9, 1.); }` })));
+// soft halo behind it
+{ const cv = document.createElement('canvas'); cv.width = cv.height = 256; const x = cv.getContext('2d'); const g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+  g.addColorStop(0, 'rgba(139,92,246,.55)'); g.addColorStop(.45, 'rgba(34,211,238,.12)'); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+  const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(cv), opacity: .5, fog: false, ...ADD })); halo.scale.setScalar(GR * 3.4); halo.renderOrder = -1; toolsG.add(halo); }
+// core and orbit rings
+const core = new THREE.Group(); globe.add(core);
+core.add(new THREE.Mesh(new THREE.IcosahedronGeometry(.42, 2), new THREE.MeshBasicMaterial({ color: new THREE.Color(1.6, 1.2, 2.4) })));
+core.add(new THREE.LineSegments(new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(.95, 0)), new THREE.LineBasicMaterial({ color: col(C.cyan, 1.6), opacity: .6, ...ADD })));
+const orbits = [[1.2, .35, C.cyan], [1.28, -.5, C.pink]].map(([r, tilt, c]) => {
+  const g = new THREE.Group(); g.rotation.set(Math.PI / 2 + tilt, 0, tilt * .6); toolsG.add(g);
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(GR * r, .008, 6, 200), new THREE.MeshBasicMaterial({ color: col(c, 1.2), opacity: .35, ...ADD })));
+  const sat = new THREE.Mesh(new THREE.SphereGeometry(.07, 12, 12), new THREE.MeshBasicMaterial({ color: col(c, 5) })); g.add(sat); return { g, sat, r: GR * r }; });
+// tool dots and name labels
+const toolDots = toolPos.map((p, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.11, 12, 12), new THREE.MeshBasicMaterial({ color: col(TOOLS[i][1], 4) })); m.position.copy(p); globe.add(m); return m; });
+const labels = TOOLS.map(([name, c], i) => {
+  const H2 = 96, pad = 30, dot = 11, cv = document.createElement('canvas'), x = cv.getContext('2d'); x.font = `600 46px ${SANS}`;
+  cv.width = Math.ceil(x.measureText(name).width) + pad * 2 + dot * 2 + 20; cv.height = H2; const w = cv.width;
+  x.fillStyle = 'rgba(8,8,12,.86)'; x.strokeStyle = c + 'AA'; x.lineWidth = 3; x.beginPath(); x.roundRect(2, 2, w - 4, H2 - 4, (H2 - 4) / 2); x.fill(); x.stroke();
+  x.shadowColor = c; x.shadowBlur = 16; x.fillStyle = c; x.beginPath(); x.arc(pad + dot, H2 / 2, dot, 0, TAU); x.fill(); x.shadowBlur = 0;
+  x.font = `600 46px ${SANS}`; x.fillStyle = '#F4F4F5'; x.textBaseline = 'middle'; x.fillText(name, pad + dot * 2 + 20, H2 / 2 + 2);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, fog: false }));
+  s.userData.h = .56; s.userData.w = .56 * w / H2; s.position.copy(toolPos[i]).multiplyScalar(1.15); s.center.set(.5, .5); globe.add(s); return s; });
+// connections: arcs between tools that are used together, with light running along them
+const LINKS = [['TypeScript', 'React'], ['TypeScript', 'Node.js'], ['React', 'Node.js'], ['Node.js', 'PostgreSQL'], ['Java', 'Spring Boot'], ['Spring Boot', 'PostgreSQL'],
+  ['SQL', 'PostgreSQL'], ['Python', 'SQL'], ['Python', 'LLMs'], ['Python', 'Computer Vision'], ['LLMs', 'Computer Vision'], ['LLMs', 'Node.js'], ['Swift', 'Node.js'],
+  ['Docker', 'Node.js'], ['Docker', 'Spring Boot'], ['Docker', 'GitHub Actions'], ['GitHub Actions', 'Jenkins'], ['Jenkins', 'Selenium'], ['GitHub Actions', 'Cloudflare'], ['Selenium', 'TypeScript']];
+const tIdx = n => TOOLS.findIndex(x => x[0] === n), SEG = 64, RADS = 6;
+const arcs = LINKS.map(([A, B]) => {
+  const ia = tIdx(A), ib = tIdx(B), a = toolPos[ia], b = toolPos[ib], ang = a.angleTo(b), lift = .3 + ang * .7, pts = [];
+  for (let s = 0; s <= 24; s++) { const u = s / 24; pts.push(a.clone().multiplyScalar(Math.sin((1 - u) * ang)).add(b.clone().multiplyScalar(Math.sin(u * ang))).divideScalar(Math.sin(ang)).setLength(GR + lift * Math.sin(Math.PI * u))); }
+  const curve = new THREE.CatmullRomCurve3(pts), geo = new THREE.TubeGeometry(curve, SEG, .016, RADS, false);
+  const ca = col(TOOLS[ia][1], 1.25), cb = col(TOOLS[ib][1], 1.25), cl = new Float32Array(geo.attributes.position.count * 3), tc = new THREE.Color();
+  for (let s = 0; s <= SEG; s++) { tc.copy(ca).lerp(cb, s / SEG); for (let r = 0; r <= RADS; r++) tc.toArray(cl, (s * (RADS + 1) + r) * 3); }
+  geo.setAttribute('color', new THREE.BufferAttribute(cl, 3));
+  const tube = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ vertexColors: true, opacity: .75, ...ADD })); globe.add(tube);
+  const pulse = new THREE.Mesh(new THREE.SphereGeometry(.075, 12, 12), new THREE.MeshBasicMaterial({ color: col(TOOLS[ib][1], 6).lerp(new THREE.Color(5, 5, 5), .35) })); globe.add(pulse);
+  return { tube, pulse, curve }; });
+const tmpV = new THREE.Vector3(), camDir = new THREE.Vector3();
 
 // ================================================================ post processing
 const composer = new EffectComposer(renderer);
@@ -276,7 +325,7 @@ const poseHero = t => { const P = (((t % T) + T) % T) / T, a = .6 * Math.sin(P *
 const poseDay = t => { const u = smooth(.0, 1, clamp((t - 6.0) / 5.0)); const x = lerp(-2.5 * SP, 2.5 * SP, u);
   return { p: V(X_DAY + x + Math.sin(u * 3) * 1.2, .8 + Math.sin(u * 5) * .3, 9.5), l: V(X_DAY + x, -.3, 0), fov: 44 }; };
 const poseSvc = t => { const k = clamp((t - 12) / 7); return { p: V(X_SVC + Math.sin(k * 2.2 - 1.1) * 2.4, 1.0 + Math.sin(k * 3) * .4, 10.6), l: V(X_SVC - 1.8, .2, 0), fov: 42 }; };
-const poseTools = t => { const k = clamp((t - 19.8) / 4); return { p: V(X_TOOLS + Math.sin(k * 2.4 - 1.2) * 2, .8, 14.5), l: V(X_TOOLS - 2.6, 0, 0), fov: 44 }; };
+const poseTools = t => { const k = clamp((t - 19.8) / 4); return { p: V(X_TOOLS + Math.sin(k * 2.4 - 1.2) * 2, .8, 18.5), l: V(X_TOOLS - .4, 0, 0), fov: 44 }; };
 const SECT = [[0, 5.4, poseHero], [5.4, 11.4, poseDay], [11.4, 19.4, poseSvc], [19.4, 23.4, poseTools], [23.4, T, poseHero]];
 const TW = .9; // half-width of fly windows
 let kick = 0;
@@ -354,7 +403,8 @@ function frame(t) {
   // camera
   const pose = cameraAt(t);
   camera.position.copy(pose.p); camera.fov = (pose.fov + kick * 14) * (W / H < 1 ? 1.5 : 1);
-  const shift = W > 980 ? 0.2 * (1 - smooth(4.6, 6.2, t) + smooth(22.8, 24.4, t)) : 0;
+  // push the 3D to the right while the hero, toolbelt and contact text sit on the left
+  const shift = W > 980 ? 0.2 * Math.max(1 - smooth(4.6, 6.2, t), smooth(19.0, 20.2, t)) : 0;
   if (shift > 0.001) camera.setViewOffset(W, H, -W * shift, 0, W, H); else camera.clearViewOffset();
   camera.updateProjectionMatrix();
   camera.lookAt(pose.l); camera.updateMatrixWorld();
@@ -392,8 +442,26 @@ function frame(t) {
 
   // ---- tools
   toolsG.visible = t > 17.8;
-  globe.rotation.y = (t - 19.4) * .55; globe.rotation.x = .25;
-  globe.updateMatrixWorld(true);
+  if (toolsG.visible) {
+    const now = RM ? 0 : performance.now() / 1000; // gentle idle drift so the globe stays alive when scrolling stops
+    globe.rotation.y = (t - 19.4) * .55 + now * .05; globe.rotation.x = .25;
+    globe.updateMatrixWorld(true);
+    camDir.copy(camera.position).sub(toolsG.position).normalize();
+    const appear = i => smooth(19.7 + i * .04, 20.5 + i * .04, t);
+    labels.forEach((s, i) => {
+      const f = s.getWorldPosition(tmpV).sub(toolsG.position).normalize().dot(camDir), k = appear(i);
+      s.material.opacity = k * (.08 + .92 * smooth(-.3, .5, f));
+      const sc = (.8 + .25 * smooth(-.2, .8, f)) * (.6 + .4 * k); s.scale.set(s.userData.w * sc, s.userData.h * sc, 1);
+    });
+    toolDots.forEach((m, i) => m.scale.setScalar((1 + .3 * Math.sin(P * TAU * 12 + i + now * 3)) * appear(i)));
+    arcs.forEach((a, i) => {
+      const k = smooth(20.0 + i * .05, 20.9 + i * .05, t);
+      a.tube.visible = k > 0; a.tube.geometry.setDrawRange(0, Math.floor(k * SEG) * RADS * 6);
+      a.pulse.visible = k >= 1; if (k >= 1) a.curve.getPointAt(((RM ? t * .4 : now * .3) + i * .37) % 1, a.pulse.position);
+    });
+    core.rotation.set(now * .4 + t * .3, now * .6 + t * .5, 0);
+    orbits.forEach((o, i) => { const u = (now * (.12 + i * .05) + t * .2 + i * .5) * TAU; o.sat.position.set(Math.cos(u) * o.r, Math.sin(u) * o.r, 0); o.g.rotation.z = now * .03 * (i ? -1 : 1) + i; });
+  }
 
   // render
   composer.render();
@@ -423,7 +491,6 @@ function frame(t) {
   toolLabels.forEach((d, i) => { const w = toolPos[i].clone().applyMatrix4(globe.matrixWorld); const s = toScreen(w);
     const depth = clamp(1 - (w.distanceTo(camera.position) - 7.6) / 9); d.style.left = '0'; d.style.top = '0';
     const k = smooth(.0, 1, depth); place(d, toVis * (.1 + .9 * k) * smooth(20.2 + i * .04, 20.9 + i * .04, t), s.x - d.offsetWidth / 2, s.y - 22, .55 + .6 * k); d.style.zIndex = Math.round(depth * 100); });
-  toolDots.forEach((m, i) => m.scale.setScalar(1 + .3 * Math.sin(P * TAU * 12 + i)));
 
   const oVis = win(t, 24.3, T - .35, .6), op = smooth(24.3, 25.2, t);
   place(oKick, oVis * op, (1 - op) * -30);
