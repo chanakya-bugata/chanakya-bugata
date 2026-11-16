@@ -182,23 +182,33 @@ const SERV = [
   ['Data and analysis', C.lime, ['Turn raw numbers into scores,', 'reports and clear decisions.'], 'Python · SQL · Reports'],
   ['Automation and quality', C.orange, ['Scheduled jobs, release pipelines', 'and automated testing.'], 'GitHub Actions · Jenkins · Selenium'],
 ];
+const SANS = '"Geist", "Segoe UI", system-ui, sans-serif', MONO = '"Geist Mono", Consolas, monospace';
+try { await Promise.race([Promise.all(['600 64px Geist', '400 36px Geist', '500 26px "Geist Mono"'].map(f => document.fonts.load(f))), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
 function panelTexture([title, c, desc, tags], idx) {
   const cv = document.createElement('canvas'); cv.width = 800; cv.height = 1000; const x = cv.getContext('2d');
-  const gr = x.createLinearGradient(0, 0, 800, 1000); gr.addColorStop(0, 'rgba(12,14,24,.86)'); gr.addColorStop(1, 'rgba(6,7,12,.92)');
-  x.fillStyle = gr; x.beginPath(); x.roundRect(0, 0, 800, 1000, 44); x.fill();
-  const rg = x.createRadialGradient(80, 60, 0, 80, 60, 700); rg.addColorStop(0, c + '55'); rg.addColorStop(1, c + '00');
-  x.fillStyle = rg; x.beginPath(); x.roundRect(0, 0, 800, 1000, 44); x.fill();
-  x.strokeStyle = c + 'cc'; x.lineWidth = 4; x.beginPath(); x.roundRect(2, 2, 796, 996, 44); x.stroke();
-  x.fillStyle = c; x.font = '700 30px Consolas, monospace'; x.fillText(String(idx + 1).padStart(2, '0') + ' / 06', 56, 84);
-  x.fillStyle = '#F4F5F9'; x.font = '700 64px Bahnschrift, "Segoe UI", sans-serif';
+  const R = 40;
+  x.fillStyle = 'rgba(6,6,6,.9)'; x.beginPath(); x.roundRect(0, 0, 800, 1000, R); x.fill();
+  const rg = x.createRadialGradient(400, 230, 0, 400, 230, 420); rg.addColorStop(0, c + '38'); rg.addColorStop(1, c + '00');
+  x.fillStyle = rg; x.beginPath(); x.roundRect(0, 0, 800, 1000, R); x.fill();
+  x.strokeStyle = 'rgba(255,255,255,.16)'; x.lineWidth = 3; x.beginPath(); x.roundRect(1.5, 1.5, 797, 997, R); x.stroke();
+  const tg = x.createLinearGradient(120, 0, 680, 0); tg.addColorStop(0, c + '00'); tg.addColorStop(.5, c); tg.addColorStop(1, c + '00');
+  x.fillStyle = tg; x.fillRect(120, 0, 560, 3);
+  x.font = `500 26px ${MONO}`; x.fillStyle = '#8A8A8A'; x.fillText(String(idx + 1).padStart(2, '0') + ' — SERVICE', 56, 80);
+  x.textAlign = 'right'; x.fillText(String(idx + 1).padStart(2, '0') + ' / 06', 744, 80); x.textAlign = 'left';
+  x.fillStyle = '#EDEDED'; x.font = `600 62px ${SANS}`;
   const words = title.split(' '); let lines = [], cur = '';
   words.forEach(w => { const t = (cur + ' ' + w).trim(); if (x.measureText(t).width > 690) { lines.push(cur); cur = w; } else cur = t; }); lines.push(cur);
-  lines.forEach((l, i) => x.fillText(l, 56, 560 + i * 72));
-  const dy = 560 + lines.length * 72 + 20;
-  x.fillStyle = '#B6BFD0'; x.font = '500 38px "Segoe UI", sans-serif';
-  desc.forEach((l, i) => x.fillText(l, 56, dy + 30 + i * 52));
-  x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 2; x.beginPath(); x.moveTo(56, 870); x.lineTo(744, 870); x.stroke();
-  x.fillStyle = c; x.font = '700 31px Consolas, monospace'; x.fillText(tags, 56, 930);
+  lines.forEach((l, i) => x.fillText(l, 56, 560 + i * 70));
+  const dy = 560 + lines.length * 70 + 14;
+  x.fillStyle = '#A1A1A1'; x.font = `400 35px ${SANS}`;
+  desc.forEach((l, i) => x.fillText(l, 56, dy + 30 + i * 50));
+  x.font = `500 24px ${MONO}`; let tx = 56;
+  tags.split(' · ').forEach(tag => {
+    const w = x.measureText(tag).width + 32;
+    x.fillStyle = 'rgba(255,255,255,.06)'; x.strokeStyle = 'rgba(255,255,255,.14)'; x.lineWidth = 2;
+    x.beginPath(); x.roundRect(tx, 892, w, 50, 10); x.fill(); x.stroke();
+    x.fillStyle = '#D4D4D4'; x.fillText(tag, tx + 16, 926); tx += w + 12;
+  });
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8; return tex;
 }
 function glyph(kind, c) {
@@ -221,12 +231,12 @@ const panels = SERV.map((s, i) => {
   const slab = new THREE.Mesh(new THREE.BoxGeometry(4, 5, .12), glass(s[1], { thickness: .8, flatShading: false, roughness: .15, transmission: .85, color: new THREE.Color(s[1]).lerp(new THREE.Color('#0b0d14'), .6) }));
   const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(4.04, 5.04, .14)), new THREE.LineBasicMaterial({ color: col(s[1], 2.4), transparent: true, blending: THREE.AdditiveBlending }));
   const face = new THREE.Mesh(new THREE.PlaneGeometry(4, 5), new THREE.MeshBasicMaterial({ map: panelTexture(s, i), transparent: true, toneMapped: false }));
-  face.position.z = .075; face.visible = false;
+  face.position.z = .075;
   const gl = glyph(i, s[1]); gl.position.set(0, 1.35, .55); gl.scale.setScalar(1.15);
   g.add(slab, edge, face, gl); svcG.add(g); return { g, gl, edge };
 });
-function ringAngle(u) { // u in [0,6]: dwell then eased turn per panel
-  const n = Math.floor(u), f = u - n; return (n + easeIO(clamp((f - .32) / .68))) * (TAU / 6);
+function ringAngle(u) { // u in [0,6]: hold each panel facing front, then ease to the next; stop on the last
+  const n = Math.min(5, Math.floor(u)), f = u - n; return (n + (n < 5 ? easeIO(clamp((f - .55) / .45)) : 0)) * (TAU / 6);
 }
 
 // ================================================================ TOOLS (word globe)
@@ -368,10 +378,12 @@ function frame(t) {
 
   // ---- services
   svcG.visible = t > 9.8 && t < 21.2;
-  const sv = (t - 12.2) / 1.15, ang = ringAngle(clamp(sv, 0, 6));
+  const sv = (t - 12.7) / 1.1, ang = ringAngle(clamp(sv, 0, 6));
+  let best = -2;
   panels.forEach((p, i) => {
     const th = i * TAU / 6 - ang; p.g.position.set(Math.sin(th) * RING_R, 0, Math.cos(th) * RING_R - RING_R + 0);
     p.g.rotation.y = th; const f = Math.max(0, Math.cos(th));
+    if (Math.cos(th) > best) { best = Math.cos(th); window.svcActive = i; }
     p.g.scale.setScalar(1 + .06 * f); p.edge.material.opacity = .35 + .65 * f;
     p.gl.rotation.y = P * TAU * 2 + i; p.gl.rotation.x = .25 * Math.sin(P * TAU * 4 + i); p.gl.position.y = 1.35 + .1 * Math.sin(P * TAU * 6 + i);
     if (p.gl.userData.spin) p.gl.userData.spin.rotation.z = P * TAU * 4;
