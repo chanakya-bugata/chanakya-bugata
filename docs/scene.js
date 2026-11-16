@@ -109,7 +109,9 @@ hero.add(hCore);
 const hCube = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.7, 1.7, 1.7)),
   new THREE.LineBasicMaterial({ color: col(C.pink, 2.8), transparent: true, blending: THREE.AdditiveBlending }));
 hero.add(hCube);
-const rings = [[3.1, C.violet, .5, 1.2], [3.8, C.cyan, 1.25, -.5], [4.5, C.pink, .15, .9]].map(([r, c, rx, rz], i) => {
+// one ring per kind of thing I build, all orbiting the same product core
+const HERO_ORBITS = [['Web apps', C.cyan], ['Mobile apps', C.pink], ['AI features', C.violet], ['Automation', C.orange]];
+const rings = [[3.0, C.cyan, .5, 1.2], [3.6, C.pink, 1.25, -.5], [4.2, C.violet, .15, .9], [4.8, C.orange, .85, .25]].map(([r, c, rx, rz], i) => {
   const pivot = new THREE.Group(); pivot.rotation.set(rx, 0, rz);
   const spin = new THREE.Group(); pivot.add(spin);
   spin.add(new THREE.Mesh(new THREE.TorusGeometry(r, .016, 8, 220), new THREE.MeshBasicMaterial({ color: col(c, 2.2) })));
@@ -117,7 +119,7 @@ const rings = [[3.1, C.violet, .5, 1.2], [3.8, C.cyan, 1.25, -.5], [4.5, C.pink,
   sat.position.set(r, 0, 0); spin.add(sat);
   const halo = new THREE.Mesh(new THREE.SphereGeometry(.3, 16, 16), new THREE.MeshBasicMaterial({ color: col(c, .5), transparent: true, opacity: .35, blending: THREE.AdditiveBlending }));
   halo.position.copy(sat.position); spin.add(halo);
-  hero.add(pivot); return { pivot, spin, k: [2, -3, 4][i] };
+  hero.add(pivot); return { pivot, spin, r, k: [2, -3, 4, -2][i], w: [.22, -.17, .13, -.1][i] };
 });
 // orbiting shards
 const SH = 150;
@@ -131,13 +133,14 @@ for (let i = 0; i < SH; i++) {
 hero.add(shards);
 const dummy = new THREE.Object3D();
 
-function updateHero(P) {
-  hGlass.rotation.set(P * TAU * 1, P * TAU * 2, 0); hWire.rotation.copy(hGlass.rotation);
-  hCore.scale.setScalar(1 + .12 * Math.sin(P * TAU * 14)); hCore.rotation.y = P * TAU * 3;
-  hCube.rotation.set(P * TAU * 2, -P * TAU * 3, P * TAU);
-  rings.forEach(r => { r.spin.rotation.y = P * TAU * r.k; r.pivot.rotation.y = P * TAU * (r.k > 0 ? 1 : -1); });
+// P follows the scroll; n is wall-clock seconds so the hero keeps turning when the page is still
+function updateHero(P, n) {
+  hGlass.rotation.set(P * TAU * 1 + n * .07, P * TAU * 2 + n * .18, 0); hWire.rotation.copy(hGlass.rotation);
+  hCore.scale.setScalar(1 + .12 * Math.sin(P * TAU * 14 + n * 2.2)); hCore.rotation.y = P * TAU * 3 + n * .4;
+  hCube.rotation.set(P * TAU * 2 + n * .25, -P * TAU * 3 - n * .3, P * TAU + n * .12);
+  rings.forEach(r => { r.spin.rotation.y = P * TAU * r.k + n * r.w; r.pivot.rotation.y = P * TAU * (r.k > 0 ? 1 : -1) + n * r.w * .25; });
   for (let i = 0; i < SH; i++) {
-    const d = shardData[i], a = d.a0 + P * TAU * d.k;
+    const d = shardData[i], a = d.a0 + P * TAU * d.k + n * .05 * d.k;
     dummy.position.set(Math.cos(a) * d.r, Math.sin(a * 1.0 + d.inc) * d.r * d.inc * .5, Math.sin(a) * d.r);
     dummy.rotation.set(P * TAU * d.sp, P * TAU * d.sp * 2, 0); dummy.scale.setScalar(d.s); dummy.updateMatrix();
     shards.setMatrixAt(i, dummy.matrix);
@@ -273,7 +276,7 @@ const orbits = [[1.2, .35, C.cyan], [1.28, -.5, C.pink]].map(([r, tilt, c]) => {
   const sat = new THREE.Mesh(new THREE.SphereGeometry(.07, 12, 12), new THREE.MeshBasicMaterial({ color: col(c, 5) })); g.add(sat); return { g, sat, r: GR * r }; });
 // tool dots and name labels
 const toolDots = toolPos.map((p, i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(.11, 12, 12), new THREE.MeshBasicMaterial({ color: col(TOOLS[i][1], 4) })); m.position.copy(p); globe.add(m); return m; });
-const labels = TOOLS.map(([name, c], i) => {
+function pillSprite(name, c, h) {
   const H2 = 96, pad = 30, dot = 11, cv = document.createElement('canvas'), x = cv.getContext('2d'); x.font = `600 46px ${SANS}`;
   cv.width = Math.ceil(x.measureText(name).width) + pad * 2 + dot * 2 + 20; cv.height = H2; const w = cv.width;
   x.fillStyle = 'rgba(8,8,12,.86)'; x.strokeStyle = c + 'AA'; x.lineWidth = 3; x.beginPath(); x.roundRect(2, 2, w - 4, H2 - 4, (H2 - 4) / 2); x.fill(); x.stroke();
@@ -281,7 +284,11 @@ const labels = TOOLS.map(([name, c], i) => {
   x.font = `600 46px ${SANS}`; x.fillStyle = '#F4F4F5'; x.textBaseline = 'middle'; x.fillText(name, pad + dot * 2 + 20, H2 / 2 + 2);
   const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
   const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, toneMapped: false, fog: false }));
-  s.userData.h = .56; s.userData.w = .56 * w / H2; s.position.copy(toolPos[i]).multiplyScalar(1.15); s.center.set(.5, .5); globe.add(s); return s; });
+  s.userData.h = h; s.userData.w = h * w / H2; s.scale.set(s.userData.w, h, 1); return s;
+}
+const labels = TOOLS.map(([name, c], i) => { const s = pillSprite(name, c, .56); s.position.copy(toolPos[i]).multiplyScalar(1.15); globe.add(s); return s; });
+// hero: each orbit carries the name of what it stands for, riding next to its satellite
+rings.forEach((r, i) => { const s = pillSprite(...HERO_ORBITS[i], .5); s.position.set(r.r, .5, 0); r.spin.add(s); r.label = s; });
 // connections: arcs between tools that are used together, with light running along them
 const LINKS = [['TypeScript', 'React'], ['TypeScript', 'Node.js'], ['React', 'Node.js'], ['Node.js', 'PostgreSQL'], ['Java', 'Spring Boot'], ['Spring Boot', 'PostgreSQL'],
   ['SQL', 'PostgreSQL'], ['Python', 'SQL'], ['Python', 'LLMs'], ['Python', 'Computer Vision'], ['LLMs', 'Computer Vision'], ['LLMs', 'Node.js'], ['Swift', 'Node.js'],
@@ -322,7 +329,10 @@ composer.addPass(new OutputPass());
 const V = (x, y, z) => new THREE.Vector3(x, y, z);
 const poseHero = t => { const P = (((t % T) + T) % T) / T, a = .6 * Math.sin(P * TAU), e = .5 + .5 * Math.sin(P * TAU * 2);
   return { p: V(Math.sin(a) * 11.5, 1.3 + .8 * Math.sin(P * TAU * 3) * .5, Math.cos(a) * 11.5), l: V(-2.1, 0, 0), fov: 40 }; };
-const poseDay = t => { const u = smooth(.0, 1, clamp((t - 6.0) / 5.0)); const x = lerp(-2.5 * SP, 2.5 * SP, u);
+// auto-play while nobody scrolls: mix 0 = follow the scroll, 1 = follow the timed loop
+let dayMix = 0, dayIdleU = 0, svcMix = 0, svcLoopAng = 0, lastNow = performance.now();
+const IDLE_AFTER = 2.5, DAY_STEP = 3.2, SVC_STEP = 3.6;
+const poseDay = t => { const u = lerp(smooth(.0, 1, clamp((t - 6.0) / 5.0)), dayIdleU, dayMix); const x = lerp(-2.5 * SP, 2.5 * SP, u);
   return { p: V(X_DAY + x + Math.sin(u * 3) * 1.2, .8 + Math.sin(u * 5) * .3, 9.5), l: V(X_DAY + x, -.3, 0), fov: 44 }; };
 const poseSvc = t => { const k = clamp((t - 12) / 7); return { p: V(X_SVC + Math.sin(k * 2.2 - 1.1) * 2.4, 1.0 + Math.sin(k * 3) * .4, 10.6), l: V(X_SVC - 1.8, .2, 0), fov: 42 }; };
 const poseTools = t => { const k = clamp((t - 19.8) / 4); return { p: V(X_TOOLS + Math.sin(k * 2.4 - 1.2) * 2, .8, 18.5), l: V(X_TOOLS - .4, 0, 0), fov: 44 }; };
@@ -398,7 +408,18 @@ function toScreen(v) { proj.copy(v).project(camera); return { x: (proj.x * .5 + 
 function frame(t) {
   const P = t / T;
   window.starMat.uniforms.uP.value = P; gridMat.uniforms.uP.value = P;
-  updateHero(P);
+  const nowMs = performance.now(), dt = Math.min(.1, (nowMs - lastNow) / 1000); lastNow = nowMs;
+  const idle = RM ? 0 : nowMs / 1000;
+  updateHero(P, idle);
+
+  // timed loop for the daily steps and the service cards once scrolling stops
+  const still = RM ? 0 : (window.idleFor || 0) - IDLE_AFTER, ease = 1 - Math.exp(-dt * 2.2);
+  const dayScrollU = smooth(0, 1, clamp((t - 6.0) / 5.0));
+  const dayOn = still > 0 && t > 6.2 && t < 10.8;
+  if (dayOn) { const n = (Math.round(dayScrollU * 5) + Math.floor(still / DAY_STEP)) % 6; if (dayMix < .001) dayIdleU = dayScrollU; dayIdleU += (n / 5 - dayIdleU) * ease; }
+  dayMix += ((dayOn ? 1 : 0) - dayMix) * ease;
+  const svcOn = still > 0 && t > 12.7 && t < 19.2;
+  svcMix += ((svcOn ? 1 : 0) - svcMix) * ease;
 
   // camera
   const pose = cameraAt(t);
@@ -413,12 +434,20 @@ function frame(t) {
   // ---- hero visibility / intro
   hero.visible = t < 7 || t > 21;
   const heroIn = (t < 5.4 + .6) ? smooth(0, 1.2, t) : 1;
+  if (hero.visible) {
+    hero.updateMatrixWorld(true); camDir.copy(camera.position).normalize();
+    const show = smooth(.4, 1.4, t) * (1 - smooth(4.8, 5.8, t)) + smooth(24, 25, t);
+    rings.forEach(r => { const f = r.label.getWorldPosition(tmpV).normalize().dot(camDir), k = smooth(-.35, .35, f);
+      r.label.material.opacity = show * (.12 + .88 * k); const sc = .85 + .2 * k; r.label.scale.set(r.label.userData.w * sc, r.label.userData.h * sc, 1); });
+  }
 
   // ---- day
   dayG.visible = t > 3.8 && t < 13;
-  const focusX = camera.position.x - X_DAY;
+  const focusX = camera.position.x - X_DAY; let dayBest = 0;
+  window.dayActive = t > 5.6 && t < 11.2 ? 0 : -1;
   cubes.forEach((c, i) => {
     const near = Math.exp(-Math.pow((c.g.position.x - focusX) / 2.6, 2));
+    if (window.dayActive >= 0 && near > dayBest) { dayBest = near; window.dayActive = i; }
     c.g.position.y = Math.sin(P * TAU * 6 + i) * .22 + .15;
     c.g.rotation.set(P * TAU * 2 * (i % 2 ? 1 : -1), P * TAU * 3 + i, 0);
     c.g.scale.setScalar(.8 + .5 * near);
@@ -428,7 +457,13 @@ function frame(t) {
 
   // ---- services
   svcG.visible = t > 9.8 && t < 21.2;
-  const sv = (t - 12.7) / 1.1, ang = ringAngle(clamp(sv, 0, 6));
+  const sv = (t - 12.7) / 1.1, svU = clamp(sv, 0, 6);
+  let ang = ringAngle(svU);
+  if (svcOn) { // hold each card, then turn to the next one, round and round
+    const s = still / SVC_STEP, n = Math.floor(s), f = s - n;
+    svcLoopAng = (Math.min(5, Math.round(svU)) + n + easeIO(clamp((f - .6) / .4))) * TAU / 6;
+  }
+  if (svcMix > .001) { const d = svcLoopAng - ang; ang += Math.atan2(Math.sin(d), Math.cos(d)) * svcMix; }
   let best = -2;
   panels.forEach((p, i) => {
     const th = i * TAU / 6 - ang; p.g.position.set(Math.sin(th) * RING_R, 0, Math.cos(th) * RING_R - RING_R + 0);

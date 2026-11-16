@@ -93,8 +93,11 @@
   .steps li { display: grid; grid-template-columns: 64px 1fr; gap: 4px 20px; padding: 22px 0; border-bottom: 1px solid var(--line); position: relative; }
   .steps li::before { counter-increment: s; content: counter(s, decimal-leading-zero); font: 500 13px/1.9 var(--mono); color: var(--faint); grid-row: span 2; transition: color .3s; }
   .steps li::after { content: ''; position: absolute; left: 0; bottom: -1px; height: 1px; width: 100%; transform: scaleX(0); transform-origin: left; background: linear-gradient(90deg, var(--accent), var(--accent-2)); transition: transform .6s var(--ease); }
-  .steps li:hover::after { transform: scaleX(1); }
-  .steps li:hover::before { color: var(--accent-2); }
+  .steps li:hover::after, .steps li[aria-current="true"]::after { transform: scaleX(1); }
+  .steps li:hover::before, .steps li[aria-current="true"]::before { color: var(--accent-2); }
+  .steps h3, .steps p { transition: color .4s var(--ease); }
+  .steps.live li:not([aria-current="true"]) h3 { color: var(--muted); }
+  .steps.live li:not([aria-current="true"]) p { color: var(--faint); }
   .steps p { margin: 0; color: var(--muted); }
 
   /* services bento */
@@ -312,6 +315,16 @@
     if (i === svcShown || i == null) return; svcShown = i;
     svcItems.forEach((li, k) => li.setAttribute('aria-current', String(k === i)));
   }
+  const stepList = document.querySelector('.steps'), stepItems = [...stepList.children];
+  let dayShown = -2;
+  function markDay(i) {
+    if (i === dayShown || i == null) return; dayShown = i;
+    stepList.classList.toggle('live', i >= 0);
+    stepItems.forEach((li, k) => li.setAttribute('aria-current', String(k === i)));
+  }
+  // seconds since the visitor last scrolled; the 3D plays a timed loop once this passes a few seconds
+  let lastScroll = performance.now();
+  ['scroll', 'wheel', 'touchmove', 'keydown'].forEach(e => addEventListener(e, () => { lastScroll = performance.now(); }, { passive: true }));
   function sceneTime() {
     const mid = scrollY + innerHeight * .5;
     for (const s of secs) {
@@ -348,8 +361,10 @@
       const dt = Math.min(.1, (now - last) / 1000); last = now;
       const tgt = sceneTime();
       cur = reduce ? tgt : cur + (tgt - cur) * (1 - Math.exp(-dt * 5));
+      window.idleFor = (now - lastScroll) / 1000;
       window.frame(cur);
       markService(window.svcActive);
+      markDay(window.dayActive);
       requestAnimationFrame(tick);
     };
     requestAnimationFrame(tick);
