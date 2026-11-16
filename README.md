@@ -1,6 +1,6 @@
-<a href="assets/reel.mp4"><img src="assets/reel.webp" alt="Chanakya Bugata, full-stack engineer. A short 3D reel: a normal day of work, the services on offer (web apps, mobile apps, AI features, backends, data analysis, automation), the tools used, and how to get in touch." width="100%"/></a>
+<a href="https://chanakya-bugata.github.io/chanakya-bugata/"><img src="assets/reel.webp" alt="Chanakya Bugata, full-stack engineer. A short 3D reel: a normal day of work, the services on offer (web apps, mobile apps, AI features, backends, data analysis, automation), the tools used, and how to get in touch." width="100%"/></a>
 
-<p align="center"><a href="assets/reel.mp4">Watch the full-quality video</a></p>
+<p align="center"><a href="https://chanakya-bugata.github.io/chanakya-bugata/"><b>Open the interactive 3D portfolio — scroll to explore</b></a></p>
 
 <details>
 <summary>The same reel, as plain text</summary>

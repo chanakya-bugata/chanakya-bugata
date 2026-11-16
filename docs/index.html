@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Chanakya Bugata — Full-stack engineer</title>
+<meta name="description" content="Web apps, mobile apps, AI features, automation and data analysis, built end to end.">
+<meta name="theme-color" content="#05060A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #05060A; --surface: rgba(12, 14, 24, .72); --surface-2: rgba(20, 23, 38, .78);
+    --text: #F4F5F9; --muted: #B4BCCD; --line: rgba(255, 255, 255, .14);
+    --violet: #A78BFA; --cyan: #22D3EE; --pink: #F472B6; --lime: #A3E635; --orange: #FB923C; --sky: #38BDF8;
+    --sans: 'IBM Plex Sans', 'Segoe UI', system-ui, sans-serif; --mono: 'JetBrains Mono', Consolas, monospace;
+    --r: 20px; --gut: clamp(20px, 5vw, 72px); --ease: cubic-bezier(.22, 1, .36, 1);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 400 17px/1.6 var(--sans); -webkit-font-smoothing: antialiased; }
+  #gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; display: block; }
+  .veil { position: fixed; inset: 0; z-index: 1; pointer-events: none;
+          background: linear-gradient(90deg, rgba(5, 6, 10, .86) 0%, rgba(5, 6, 10, .55) 42%, rgba(5, 6, 10, 0) 72%); }
+  main, header, footer { position: relative; z-index: 2; }
+  a { color: inherit; }
+  :focus-visible { outline: 3px solid var(--cyan); outline-offset: 3px; border-radius: 8px; }
+  .skip { position: absolute; left: 12px; top: -60px; background: var(--cyan); color: #04141a; padding: 12px 18px; border-radius: 10px; font-weight: 700; z-index: 50; }
+  .skip:focus { top: 12px; }
+
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: flex; align-items: center; gap: 8px; padding: 14px var(--gut);
+        background: linear-gradient(rgba(5, 6, 10, .85), rgba(5, 6, 10, 0)); }
+  .brand { font: 700 15px var(--mono); letter-spacing: .08em; text-decoration: none; margin-right: auto; padding: 10px 0; }
+  nav a.l { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; padding: 12px 14px; min-height: 44px; display: inline-flex; align-items: center; border-radius: 999px; transition: color .25s, background .25s; }
+  nav a.l:hover, nav a.l[aria-current="true"] { color: var(--text); background: rgba(255, 255, 255, .09); }
+  .btn { display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 0 24px; border-radius: 999px; font-weight: 600; font-size: 16px; text-decoration: none; transition: transform .25s var(--ease), box-shadow .25s, background .25s; cursor: pointer; }
+  .btn.primary { background: linear-gradient(100deg, #8B5CF6, #22D3EE); color: #04070d; box-shadow: 0 10px 40px -10px rgba(34, 211, 238, .6); }
+  .btn.primary:hover { transform: translateY(-2px); box-shadow: 0 16px 48px -8px rgba(34, 211, 238, .75); }
+  .btn.ghost { border: 1px solid var(--line); background: rgba(255, 255, 255, .05); }
+  .btn.ghost:hover { background: rgba(255, 255, 255, .12); transform: translateY(-2px); }
+  nav .btn { min-height: 44px; padding: 0 18px; font-size: 14px; }
+
+  section { min-height: 100vh; min-height: 100dvh; padding: 120px var(--gut) 80px; display: flex; flex-direction: column; justify-content: center; max-width: 1280px; margin: 0 auto; }
+  .kick { font: 700 13px var(--mono); letter-spacing: .28em; text-transform: uppercase; color: var(--cyan); margin: 0 0 18px; }
+  h1, h2 { margin: 0; letter-spacing: -.035em; line-height: 1.02; text-wrap: balance; }
+  h1 { font-size: clamp(48px, 9vw, 120px); font-weight: 700; }
+  h2 { font-size: clamp(38px, 6vw, 76px); font-weight: 700; margin-bottom: 18px; }
+  .grad { background: linear-gradient(100deg, #A78BFA, #22D3EE 55%, #F472B6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lead { font-size: clamp(18px, 2.2vw, 24px); color: var(--muted); max-width: 34em; margin: 22px 0 0; }
+  .row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; align-items: center; }
+  .chip { display: inline-flex; align-items: center; gap: 10px; padding: 10px 18px; min-height: 44px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); font-weight: 500; font-size: 16px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c, var(--lime)); box-shadow: 0 0 12px var(--c, var(--lime)); }
+  .scroll { position: absolute; bottom: 28px; left: var(--gut); font: 700 12px var(--mono); letter-spacing: .25em; color: var(--muted); display: flex; align-items: center; gap: 12px; }
+  .scroll i { width: 1px; height: 36px; background: linear-gradient(var(--cyan), transparent); animation: drip 1.6s ease-in-out infinite; transform-origin: top; }
+  @keyframes drip { 0%, 100% { transform: scaleY(.2); opacity: .4 } 50% { transform: scaleY(1); opacity: 1 } }
+
+  .grid { display: grid; gap: 16px; margin-top: 36px; }
+  .grid.steps { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); max-width: 760px; }
+  .grid.cards { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); max-width: 820px; }
+  .card { position: relative; padding: 24px; border-radius: var(--r); background: var(--surface); border: 1px solid var(--line); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+          transition: transform .35s var(--ease), border-color .35s, background .35s; overflow: hidden; }
+  .card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: var(--c); opacity: .9; }
+  .card:hover { transform: translateY(-4px); border-color: color-mix(in srgb, var(--c) 70%, transparent); background: var(--surface-2); }
+  .card .n { font: 700 13px var(--mono); color: var(--c); letter-spacing: .12em; }
+  .card h3 { margin: 10px 0 8px; font-size: 22px; letter-spacing: -.015em; line-height: 1.2; }
+  .card p { margin: 0; color: var(--muted); font-size: 16px; }
+  .card .tags { margin-top: 16px; font: 500 13px var(--mono); color: var(--c); }
+
+  .stack { display: grid; gap: 22px; margin-top: 36px; max-width: 780px; }
+  .stack h3 { font: 700 12px var(--mono); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .mail { font: 700 clamp(20px, 3.4vw, 40px) var(--mono); color: var(--cyan); text-decoration: none; border-bottom: 2px solid rgba(34, 211, 238, .4); padding: 6px 0; word-break: break-word; transition: border-color .25s; }
+  .mail:hover { border-color: var(--cyan); }
+  footer { padding: 28px var(--gut) 40px; color: var(--muted); font-size: 14px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; max-width: 1280px; margin: 0 auto; }
+
+  .rail { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); z-index: 20; display: grid; gap: 4px; }
+  .rail a { display: grid; place-items: center; width: 44px; height: 28px; text-decoration: none; }
+  .rail a span { width: 8px; height: 8px; border-radius: 99px; background: rgba(255, 255, 255, .3); transition: all .35s var(--ease); }
+  .rail a[aria-current="true"] span { height: 26px; background: linear-gradient(var(--violet), var(--cyan)); }
+  .rail a b { position: absolute; right: 44px; opacity: 0; pointer-events: none; font: 700 11px var(--mono); letter-spacing: .15em; text-transform: uppercase; background: var(--surface-2); padding: 6px 10px; border-radius: 8px; transition: opacity .2s; white-space: nowrap; }
+  .rail a:hover b, .rail a:focus-visible b { opacity: 1; }
+
+  .rv { opacity: 0; transform: translateY(26px); transition: opacity .8s var(--ease), transform .8s var(--ease); transition-delay: calc(var(--i, 0) * 70ms); }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 1100px) {
+    .veil { background: linear-gradient(90deg, rgba(5, 6, 10, .88) 0%, rgba(5, 6, 10, .7) 60%, rgba(5, 6, 10, .3) 100%); }
+  }
+  @media (max-width: 860px) {
+    .veil { background: rgba(5, 6, 10, .68); }
+    nav a.l { display: none; }
+    .rail { display: none; }
+    section { padding-top: 96px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .rv { opacity: 1; transform: none; transition: none; }
+    .scroll i { animation: none; }
+    .btn, .card { transition: none; }
+  }
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<canvas id="gl" aria-hidden="true"></canvas>
+<div id="ui" hidden aria-hidden="true"></div>
+<div class="veil" aria-hidden="true"></div>
+
+<nav aria-label="Main">
+  <a class="brand" href="#top">CHANAKYA&nbsp;BUGATA</a>
+  <a class="l" href="#daily">Daily</a>
+  <a class="l" href="#services">Services</a>
+  <a class="l" href="#tools">Toolbelt</a>
+  <a class="btn primary" href="mailto:chanakya.offc@gmail.com">Get in touch</a>
+</nav>
+<div class="rail" aria-label="Page sections">
+  <a href="#top" aria-label="Intro"><span></span><b>Intro</b></a>
+  <a href="#daily" aria-label="Daily work"><span></span><b>Daily</b></a>
+  <a href="#services" aria-label="Services"><span></span><b>Services</b></a>
+  <a href="#tools" aria-label="Toolbelt"><span></span><b>Toolbelt</b></a>
+  <a href="#contact" aria-label="Contact"><span></span><b>Contact</b></a>
+</div>
+
+<main id="main">
+  <section id="top" data-t="0,5.4">
+    <p class="kick rv">Full-stack engineer</p>
+    <h1 class="rv" style="--i:1"><span class="grad">Chanakya<br>Bugata</span></h1>
+    <p class="lead rv" style="--i:2">I build web apps, mobile apps, AI features and automation, from the first idea to a working product, in plain language and with clean code.</p>
+    <div class="row rv" style="--i:3">
+      <a class="btn primary" href="mailto:chanakya.offc@gmail.com">Start a conversation</a>
+      <a class="btn ghost" href="#services">See what I offer</a>
+      <span class="chip"><span class="dot"></span>Available for new work</span>
+    </div>
+    <div class="scroll" aria-hidden="true"><i></i>SCROLL</div>
+  </section>
+
+  <section id="daily" data-t="5.4,11.4" aria-labelledby="h-daily">
+    <p class="kick rv">01 — Every day</p>
+    <h2 id="h-daily" class="rv" style="--i:1">A normal day,<br>step by step</h2>
+    <p class="lead rv" style="--i:2">Most days follow the same loop. Each step has one job, so nothing is left to chance.</p>
+    <div class="grid steps">
+      <article class="card rv" style="--c:var(--cyan);--i:0"><span class="n">01</span><h3>Analyse</h3><p>Read the numbers, logs and needs to find what really matters.</p></article>
+      <article class="card rv" style="--c:var(--violet);--i:1"><span class="n">02</span><h3>Design</h3><p>Plan the data, the screens and how they connect.</p></article>
+      <article class="card rv" style="--c:var(--pink);--i:2"><span class="n">03</span><h3>Build</h3><p>Write clean web, mobile and backend code.</p></article>
+      <article class="card rv" style="--c:var(--lime);--i:3"><span class="n">04</span><h3>Test</h3><p>Automated checks catch bugs before anyone sees them.</p></article>
+      <article class="card rv" style="--c:var(--orange);--i:4"><span class="n">05</span><h3>Ship</h3><p>Release safely through automated pipelines.</p></article>
+      <article class="card rv" style="--c:var(--sky);--i:5"><span class="n">06</span><h3>Monitor</h3><p>Watch the scheduled jobs and fix problems early.</p></article>
+    </div>
+  </section>
+
+  <section id="services" data-t="11.4,19.4" aria-labelledby="h-svc">
+    <p class="kick rv">02 — What I offer</p>
+    <h2 id="h-svc" class="rv" style="--i:1">Services,<br>in plain words</h2>
+    <div class="grid cards">
+      <article class="card rv" style="--c:var(--cyan);--i:0"><span class="n">01</span><h3>Web apps and dashboards</h3><p>Fast, easy-to-use sites, admin panels and internal tools.</p><div class="tags">React · TypeScript · Node.js</div></article>
+      <article class="card rv" style="--c:var(--pink);--i:1"><span class="n">02</span><h3>Mobile apps</h3><p>iPhone apps that feel smooth, from first idea to the store.</p><div class="tags">Swift · iOS</div></article>
+      <article class="card rv" style="--c:var(--violet);--i:2"><span class="n">03</span><h3>AI and smart features</h3><p>Chatbots, document helpers and computer vision that save time.</p><div class="tags">LLMs · Python · Vision</div></article>
+      <article class="card rv" style="--c:var(--sky);--i:3"><span class="n">04</span><h3>APIs and backends</h3><p>Secure, reliable services and databases behind your product.</p><div class="tags">Spring Boot · Node.js · Postgres</div></article>
+      <article class="card rv" style="--c:var(--lime);--i:4"><span class="n">05</span><h3>Data and analysis</h3><p>Turn raw numbers into scores, reports and clear decisions.</p><div class="tags">Python · SQL · Reports</div></article>
+      <article class="card rv" style="--c:var(--orange);--i:5"><span class="n">06</span><h3>Automation and quality</h3><p>Scheduled jobs, release pipelines and automated testing.</p><div class="tags">GitHub Actions · Jenkins · Selenium</div></article>
+    </div>
+  </section>
+
+  <section id="tools" data-t="19.4,23.4" aria-labelledby="h-tools">
+    <p class="kick rv">03 — Toolbelt</p>
+    <h2 id="h-tools" class="rv" style="--i:1">What I<br>build with</h2>
+    <div class="stack">
+      <div class="rv" style="--i:1"><h3>Languages and apps</h3><div class="chips"><span class="chip" style="--c:var(--cyan)"><span class="dot"></span>TypeScript</span><span class="chip" style="--c:var(--cyan)"><span class="dot"></span>React</span><span class="chip" style="--c:var(--cyan)"><span class="dot"></span>Node.js</span><span class="chip" style="--c:var(--violet)"><span class="dot"></span>Python</span><span class="chip" style="--c:var(--pink)"><span class="dot"></span>Swift</span><span class="chip" style="--c:var(--pink)"><span class="dot"></span>Java</span><span class="chip" style="--c:var(--pink)"><span class="dot"></span>Spring Boot</span></div></div>
+      <div class="rv" style="--i:2"><h3>Data and hosting</h3><div class="chips"><span class="chip" style="--c:var(--lime)"><span class="dot"></span>SQL</span><span class="chip" style="--c:var(--sky)"><span class="dot"></span>PostgreSQL</span><span class="chip" style="--c:var(--sky)"><span class="dot"></span>Docker</span><span class="chip" style="--c:var(--orange)"><span class="dot"></span>Cloudflare</span></div></div>
+      <div class="rv" style="--i:3"><h3>Automation and AI</h3><div class="chips"><span class="chip" style="--c:var(--orange)"><span class="dot"></span>GitHub Actions</span><span class="chip" style="--c:var(--orange)"><span class="dot"></span>Jenkins</span><span class="chip" style="--c:var(--lime)"><span class="dot"></span>Selenium</span><span class="chip" style="--c:var(--violet)"><span class="dot"></span>LLMs</span><span class="chip" style="--c:var(--violet)"><span class="dot"></span>Computer vision</span></div></div>
+    </div>
+  </section>
+
+  <section id="contact" data-t="23.4,27.6" aria-labelledby="h-contact">
+    <p class="kick rv">04 — Let's talk</p>
+    <h2 id="h-contact" class="rv" style="--i:1"><span class="grad">Have something<br>to build?</span></h2>
+    <p class="lead rv" style="--i:2">Tell me what you need in a few lines. I'll reply with a clear plan and next steps.</p>
+    <div class="row rv" style="--i:3"><a class="mail" href="mailto:chanakya.offc@gmail.com">chanakya.offc@gmail.com</a></div>
+    <div class="row rv" style="--i:4"><a class="btn primary" href="mailto:chanakya.offc@gmail.com">Send an email</a><span class="chip"><span class="dot"></span>Available for new work</span></div>
+  </section>
+</main>
+<footer><span>© Chanakya Bugata</span><a href="https://github.com/chanakya-bugata">github.com/chanakya-bugata</a></footer>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<script type="module">
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const secs = [...document.querySelectorAll('main section')].map(el => ({ el, r: el.dataset.t.split(',').map(Number) }));
+  const links = [...document.querySelectorAll('nav a.l, .rail a')];
+
+  // reveal-on-scroll for the text (works without WebGL too)
+  const io = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && e.target.classList.add('in')), { threshold: .15 });
+  document.querySelectorAll('.rv').forEach(n => io.observe(n));
+
+  function sceneTime() {
+    const mid = scrollY + innerHeight * .5;
+    for (const s of secs) {
+      const top = s.el.offsetTop, h = s.el.offsetHeight;
+      if (mid < top + h || s === secs[secs.length - 1]) { const p = Math.min(1, Math.max(0, (mid - top) / h)); return s.r[0] + (s.r[1] - s.r[0]) * p; }
+    }
+    return 0;
+  }
+  function markActive() {
+    const mid = scrollY + innerHeight * .5; let id = secs[0].el.id;
+    secs.forEach(s => { if (mid >= s.el.offsetTop) id = s.el.id; });
+    links.forEach(a => a.setAttribute('aria-current', String(a.getAttribute('href') === '#' + id)));
+  }
+  addEventListener('scroll', markActive, { passive: true }); markActive();
+
+  try {
+    await import('./scene.js');
+    addEventListener('resize', () => window.resize());
+    let cur = sceneTime(), last = performance.now();
+    const tick = now => {
+      const dt = Math.min(.1, (now - last) / 1000); last = now;
+      const tgt = sceneTime();
+      cur = reduce ? tgt : cur + (tgt - cur) * (1 - Math.exp(-dt * 6));
+      window.frame(cur);
+      requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  } catch (e) { console.warn('3D background unavailable', e); document.getElementById('gl').remove(); }
+</script>
+</body>
+</html>
